@@ -1,33 +1,36 @@
-import { AlgoInput, Speaker } from "./dust.types";
+import { Speaker, State } from "./dust.types";
 import _ from "lodash";
 
-export function determineNextSpeaker(state: AlgoInput): Speaker | null {
-    if (state.currentSpeaker === null) {
-        return _.sample([state.inFavorQueue.front, state.notInFavorQueue.front]);
+export function determineNextState(currState: State): State {
+    let nextState = { ...currState };
+    let { currentSpeaker } = currState;
+    if (currentSpeaker === null) {
+        currentSpeaker = _.sample([currState.inFavorQueue.front, currState.notInFavorQueue.front]);
+        nextState.currentSpeaker = currentSpeaker;
+        return nextState;
     }
 
-    state.history.push(state.currentSpeaker);
-    state.turnsElapsed[state.currentSpeaker.id] = state.turnsElapsed[state.currentSpeaker.id] + 1;
-    if (state.turnsElapsed[state.currentSpeaker.id] >= state.eachSpeakerTurn) {
-        return null;
-    }
+    nextState.currentSpeaker = currentSpeaker;
+    nextState.history.push(currState);
+    nextState.turnsElapsed[currentSpeaker.id] = currState.turnsElapsed[currentSpeaker.id] + 1;
+    // TODO: Add termination condition
 
-    let nextSpeaker: Speaker;
-    if (state.currentSpeaker.side === "inFavor") {
-        state.inFavorQueue.dequeue();
-        state.inFavorQueue.enqueue(state.currentSpeaker);
-        nextSpeaker = {
+    if (currentSpeaker.side === "inFavor") {
+        nextState.inFavorQueue.dequeue();
+        nextState.inFavorQueue.enqueue(currentSpeaker);
+        nextState.currentSpeaker = {
             side: "notInFavor",
-            id: state.notInFavorQueue.front.id
+            id: currState.notInFavorQueue.front.id
         }
     } else {
-        state.notInFavorQueue.dequeue();
-        state.notInFavorQueue.enqueue(state.currentSpeaker);
-        nextSpeaker = {
+        nextState.notInFavorQueue.dequeue();
+        nextState.notInFavorQueue.enqueue(currentSpeaker);
+        nextState.currentSpeaker = {
             side: "inFavor",
-            id: state.inFavorQueue.front.id
+            id: currState.inFavorQueue.front.id
         }
+
     }
 
-    return nextSpeaker;
+    return nextState;
 }

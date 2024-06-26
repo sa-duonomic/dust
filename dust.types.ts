@@ -5,15 +5,14 @@ export interface Speaker {
     id: string;
 }
 
-export interface AlgoInput {
-    history: Speaker[];
+export interface State {
+    history: State[];
     turnsElapsed: {
         [key: string]: number
     };
     currentSpeaker: Speaker | null;
     inFavorQueue: Queue<Speaker>;
     notInFavorQueue: Queue<Speaker>;
-
     speakerDuration: number;
     eachSpeakerTurn: number;
 }
