@@ -4,18 +4,19 @@
     "description": "Queue implementation",
     "main": "index.js",
     "scripts": {
-        "test": "tsc && jest",
-        "build": "tsc"
+        "test": "npx rimraf dist && tsc && jest",
+        "build": "npx rimraf dist && tsc"
     },
-  "devDependencies": {
-    "@types/jest": "^29.5.12",
-    "@types/lodash": "^4.17.5",
-    "jest": "^29.7.0",
-    "typescript": "^5.5.2"
-  },
-  "dependencies": {
-    "lodash": "^4.17.21",
-    "queue-typescript": "^1.0.1",
-    "ts-jest": "^29.1.5"
-  }
+    "devDependencies": {
+        "@types/jest": "^29.5.12",
+        "@types/lodash": "^4.17.5",
+        "jest": "^29.7.0",
+        "typescript": "^5.5.2"
+    },
+    "dependencies": {
+        "lodash": "^4.17.21",
+        "queue-typescript": "^1.0.1",
+        "rimraf": "^5.0.7",
+        "ts-jest": "^29.1.5"
+    }
 }
